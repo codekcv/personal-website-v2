@@ -1,23 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { navItems } from "@/lib/constants";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { ThemeToggle } from "./ThemeToggle";
 import { cn } from "@/lib/utils";
 
+// Constants
+const HEADER_OFFSET = 100;
+
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const activeSection = useScrollSpy(navItems.map((item) => item.id));
+
+  // Memoize section IDs to avoid recreating array on every render
+  const sectionIds = useMemo(() => navItems.map((item) => item.id), []);
+
+  const { activeSection, setActiveSectionImmediate } = useScrollSpy(sectionIds);
+  const isScrollingDown = useScrollDirection();
 
   const scrollToSection = (id: string) => {
+    // Immediately update the active section (no delay)
+    setActiveSectionImmediate(id);
+
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = 100;
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+      const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
 
       window.scrollTo({
         top: offsetPosition,
@@ -29,16 +40,25 @@ export default function Header() {
 
   return (
     <motion.header
-      className="fixed top-0 left-0 right-0 z-50 glass"
+      className={cn(
+        "fixed top-0 left-0 right-0 z-[100] glass transition-all duration-300",
+        isScrollingDown && "shadow-lg"
+      )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className={cn(
+        "max-w-7xl mx-auto px-6 transition-all duration-300",
+        isScrollingDown ? "py-2" : "py-4"
+      )}>
         <div className="flex items-center justify-between">
           {/* Logo */}
           <motion.div
-            className="text-xl font-bold"
+            className={cn(
+              "font-bold transition-all duration-300",
+              isScrollingDown ? "text-lg" : "text-xl"
+            )}
             whileHover={{ scale: 1.05 }}
             data-magnetic="true"
           >
@@ -46,29 +66,41 @@ export default function Header() {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={cn(
-                  "relative px-4 py-2 transition-all duration-300",
-                  "hover:text-purple-500"
-                )}
-                data-magnetic="true"
-              >
-                <span className={cn(activeSection === item.id && "gradient-text font-semibold")}>
-                  {item.label}
-                </span>
-                {activeSection === item.id && (
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-                    layoutId="activeSection"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </button>
-            ))}
+          <nav className={cn(
+            "hidden md:flex items-center transition-all duration-300",
+            isScrollingDown ? "gap-4" : "gap-8"
+          )}>
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={cn(
+                    "relative transition-all duration-300",
+                    isScrollingDown ? "px-3 py-1 text-sm" : "px-4 py-2",
+                    !isActive && "hover:text-purple-500"
+                  )}
+                  data-magnetic="true"
+                >
+                  <span
+                    className={cn(
+                      "block",
+                      isActive ? "gradient-text font-semibold" : "transition-colors duration-200"
+                    )}
+                  >
+                    {item.label}
+                  </span>
+                  {isActive && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+                      layoutId="activeSection"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </nav>
 
           {/* Theme Toggle & Mobile Menu Button */}
@@ -101,21 +133,24 @@ export default function Header() {
               transition={{ duration: 0.3 }}
             >
               <div className="flex flex-col gap-4">
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={cn(
-                      "text-left px-4 py-3 rounded-lg transition-all duration-300",
-                      "hover:bg-white/10 dark:hover:bg-black/10",
-                      activeSection === item.id && "bg-white/10 dark:bg-black/10"
-                    )}
-                  >
-                    <span className={cn(activeSection === item.id && "gradient-text font-semibold")}>
-                      {item.label}
-                    </span>
-                  </button>
-                ))}
+                {navItems.map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => scrollToSection(item.id)}
+                      className={cn(
+                        "text-left px-4 py-3 rounded-lg transition-all duration-300",
+                        "hover:bg-white/10 dark:hover:bg-black/10",
+                        isActive && "bg-white/10 dark:bg-black/10"
+                      )}
+                    >
+                      <span className={cn(isActive && "gradient-text font-semibold")}>
+                        {item.label}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </motion.nav>
           )}
