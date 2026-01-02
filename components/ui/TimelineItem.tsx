@@ -23,9 +23,9 @@ export function TimelineItem({ entry, index }: TimelineItemProps) {
       {/* Desktop layout - alternating sides */}
       <div className="hidden md:grid md:grid-cols-[1fr_auto_1fr] gap-8 w-full items-center">
         {/* Left side content */}
-        <div className={`${isEven ? "" : "md:col-start-3"}`}>
+        <div className={isEven ? "flex justify-end" : ""}>
           {isEven && (
-            <div className="glass rounded-2xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-shadow duration-300">
+            <div className="glass rounded-2xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-shadow duration-300 w-full">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="text-xl font-bold mb-1">
@@ -57,9 +57,9 @@ export function TimelineItem({ entry, index }: TimelineItemProps) {
         </div>
 
         {/* Right side content */}
-        <div className={`${isEven ? "md:col-start-3" : ""}`}>
+        <div className={!isEven ? "flex justify-start" : ""}>
           {!isEven && (
-            <div className="glass rounded-2xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-shadow duration-300">
+            <div className="glass rounded-2xl p-6 hover:shadow-xl hover:shadow-purple-500/10 transition-shadow duration-300 w-full">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="text-xl font-bold mb-1">
