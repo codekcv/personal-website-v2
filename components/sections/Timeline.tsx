@@ -7,8 +7,8 @@ import { GradientText } from "@/components/ui/GradientText";
 
 export default function Timeline() {
   return (
-    <section id="timeline" className="py-24 px-6">
-      <div className="max-w-5xl mx-auto">
+    <section id="timeline" className="py-24 px-6 relative">
+      <div className="max-w-5xl mx-auto relative z-10">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}

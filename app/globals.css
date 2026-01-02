@@ -38,10 +38,22 @@
 
 /* Glass Morphism Utilities */
 .glass {
-  background: var(--glass-bg);
+  background: var(--background);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  position: relative;
+  isolation: isolate;
+  z-index: 10;
+}
+
+/* Solid background for content sections */
+.solid-section {
+  background: var(--background);
+  position: relative;
+  isolation: isolate;
+  z-index: 5;
 }
 
 /* Gradient Text Utility */
@@ -61,6 +73,17 @@ body {
   background: var(--background);
   color: var(--foreground);
   transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+  background-image:
+    linear-gradient(rgba(139, 92, 246, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.01) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-attachment: fixed;
+}
+
+[data-theme="dark"] body {
+  background-image:
+    linear-gradient(rgba(139, 92, 246, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.02) 1px, transparent 1px);
 }
 
 /* Hide default cursor for custom magnetic cursor on desktop */

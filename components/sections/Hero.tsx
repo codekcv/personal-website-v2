@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { IconBrandGithub, IconBrandLinkedin, IconBrandTwitter, IconArrowDown } from "@tabler/icons-react";
 import { AnimatedBackground } from "@/components/effects/AnimatedBackground";
 import { GradientText } from "@/components/ui/GradientText";
+import Image from "next/image";
 
 export default function Hero() {
   const scrollToSection = (id: string) => {
@@ -30,6 +31,26 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
+          {/* Profile Image */}
+          <motion.div
+            className="mb-8 flex justify-center"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          >
+            <div className="relative w-32 h-32 md:w-40 md:h-40">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-lg opacity-50" />
+              <Image
+                src="/profile.jpg"
+                alt="Christian Villamin"
+                width={160}
+                height={160}
+                className="relative rounded-full border-4 border-background shadow-2xl object-cover"
+                priority
+              />
+            </div>
+          </motion.div>
+
           <motion.p
             className="text-lg md:text-xl mb-4 text-foreground/80"
             initial={{ opacity: 0 }}
@@ -40,13 +61,22 @@ export default function Hero() {
           </motion.p>
 
           <motion.h1
-            className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
           >
-            <GradientText>Full Stack Developer</GradientText>
+            <GradientText>Christian Villamin</GradientText>
           </motion.h1>
+
+          <motion.h2
+            className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6 text-foreground/90"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            Full Stack Developer
+          </motion.h2>
 
           <motion.p
             className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-2xl mx-auto"
