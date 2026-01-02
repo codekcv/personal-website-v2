@@ -1,0 +1,141 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { IconBrandGithub, IconBrandLinkedin, IconBrandTwitter, IconArrowDown } from "@tabler/icons-react";
+import { AnimatedBackground } from "@/components/effects/AnimatedBackground";
+import { GradientText } from "@/components/ui/GradientText";
+
+export default function Hero() {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  return (
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <AnimatedBackground />
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-32 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <motion.p
+            className="text-lg md:text-xl mb-4 text-foreground/80"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            Hi, I&apos;m
+          </motion.p>
+
+          <motion.h1
+            className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <GradientText>Full Stack Developer</GradientText>
+          </motion.h1>
+
+          <motion.p
+            className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            Building modern web experiences with cutting-edge technologies.
+            Passionate about creating intuitive, performant, and beautiful applications.
+          </motion.p>
+
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 }}
+          >
+            <button
+              onClick={() => scrollToSection("projects")}
+              className="glass rounded-full px-8 py-4 font-semibold text-lg hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300"
+              data-magnetic="true"
+            >
+              <span className="gradient-text">View Projects</span>
+            </button>
+            <button
+              onClick={() => scrollToSection("contact")}
+              className="glass rounded-full px-8 py-4 font-semibold text-lg hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300"
+              data-magnetic="true"
+            >
+              Contact Me
+            </button>
+          </motion.div>
+
+          <motion.div
+            className="flex gap-6 justify-center mb-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+          >
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass rounded-full p-4 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+              data-magnetic="true"
+              aria-label="GitHub"
+            >
+              <IconBrandGithub className="w-6 h-6" />
+            </a>
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass rounded-full p-4 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300"
+              data-magnetic="true"
+              aria-label="LinkedIn"
+            >
+              <IconBrandLinkedin className="w-6 h-6" />
+            </a>
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass rounded-full p-4 hover:shadow-lg hover:shadow-pink-500/20 transition-all duration-300"
+              data-magnetic="true"
+              aria-label="Twitter"
+            >
+              <IconBrandTwitter className="w-6 h-6" />
+            </a>
+          </motion.div>
+
+          <motion.div
+            className="flex justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4 }}
+          >
+            <motion.button
+              onClick={() => scrollToSection("tech-stack")}
+              className="text-foreground/60 hover:text-foreground transition-colors"
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              aria-label="Scroll down"
+            >
+              <IconArrowDown className="w-8 h-8" />
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
