@@ -4,7 +4,6 @@ import { useEffect, useState, useRef, useCallback } from "react";
 
 export function useScrollSpy(sectionIds: string[]) {
   const [activeSection, setActiveSection] = useState<string>(sectionIds[0]);
-  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const lastSection = useRef<string>(sectionIds[0]);
   const isUserClicking = useRef<boolean>(false);
 
@@ -37,49 +36,37 @@ export function useScrollSpy(sectionIds: string[]) {
 
         const newSection = intersectingSections[0].target.id;
 
-        // Only update if the section actually changed and has significant visibility
-        if (newSection !== lastSection.current && intersectingSections[0].intersectionRatio > 0.3) {
-          // Clear previous timer
-          if (debounceTimer.current) {
-            clearTimeout(debounceTimer.current);
-          }
-
-          // Debounce the state update to prevent flickering
-          debounceTimer.current = setTimeout(() => {
-            lastSection.current = newSection;
-            setActiveSection(newSection);
-          }, 150);
+        // Only update if the section actually changed
+        if (newSection !== lastSection.current) {
+          lastSection.current = newSection;
+          setActiveSection(newSection);
         }
       }
     };
 
     // Check if we're at the bottom of the page (for last section)
-    let scrollTimer: NodeJS.Timeout | null = null;
     const handleScroll = () => {
       // Skip if user just clicked
       if (isUserClicking.current) {
         return;
       }
 
-      if (scrollTimer) {
-        clearTimeout(scrollTimer);
-      }
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const pageHeight = document.documentElement.scrollHeight;
 
-      scrollTimer = setTimeout(() => {
-        const scrollPosition = window.scrollY + window.innerHeight;
-        const pageHeight = document.documentElement.scrollHeight;
-
-        // If we're within 100px of the bottom, activate the last section
-        if (pageHeight - scrollPosition < 100) {
-          lastSection.current = sectionIds[sectionIds.length - 1];
-          setActiveSection(sectionIds[sectionIds.length - 1]);
+      // If we're at the bottom, activate the last section
+      if (pageHeight - scrollPosition < 50) {
+        const lastSectionId = sectionIds[sectionIds.length - 1];
+        if (lastSection.current !== lastSectionId) {
+          lastSection.current = lastSectionId;
+          setActiveSection(lastSectionId);
         }
-      }, 100);
+      }
     };
 
     const observer = new IntersectionObserver(observerCallback, {
-      threshold: [0.3, 0.5, 0.7],
-      rootMargin: "-10% 0px -40% 0px",
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+      rootMargin: "-80px 0px -80% 0px",
     });
 
     sectionIds.forEach((id) => {
@@ -93,14 +80,6 @@ export function useScrollSpy(sectionIds: string[]) {
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      // Clear all timers on cleanup
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
-      }
-      if (scrollTimer) {
-        clearTimeout(scrollTimer);
-      }
-
       sectionIds.forEach((id) => {
         const element = document.getElementById(id);
         if (element) {
