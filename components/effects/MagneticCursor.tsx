@@ -8,8 +8,15 @@ export default function MagneticCursor() {
   const [cursorVariant, setCursorVariant] = useState<"default" | "hover">("default");
 
   useEffect(() => {
+    // Use requestAnimationFrame to throttle updates
+    let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(() => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      });
     };
 
     const handleMouseEnter = () => setCursorVariant("hover");
@@ -25,6 +32,9 @@ export default function MagneticCursor() {
     });
 
     return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
       window.removeEventListener("mousemove", handleMouseMove);
       magneticElements.forEach((el) => {
         el.removeEventListener("mouseenter", handleMouseEnter);

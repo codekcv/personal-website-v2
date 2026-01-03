@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 
 export function GlobalFloatingParticles() {
-  // Generate stable random values once using useState initializer
+  // Reduced particle count from 30 to 15 for better performance on mobile
   const [particles] = useState(() =>
-    Array.from({ length: 30 }, (_, i) => ({
+    Array.from({ length: 15 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       top: Math.random() * 100,
@@ -49,6 +49,9 @@ export function GlobalFloatingParticles() {
             delay: particle.delay,
             ease: "easeInOut",
           }}
+          // Optimize rendering performance
+          layoutId={undefined}
+          initial={false}
         />
       ))}
     </div>
