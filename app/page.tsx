@@ -4,7 +4,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
 
-// Lazy load below-the-fold sections
+// Lazy load below-the-fold sections.
 const TechStack = dynamic(() => import("@/components/sections/TechStack"), {
   loading: () => <div className="min-h-[400px]" />,
 });
